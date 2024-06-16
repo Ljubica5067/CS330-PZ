@@ -10,9 +10,10 @@ import kotlinx.coroutines.launch
 import rs.ac.metropolitan.cs330_pz.data.entities.Book
 import rs.ac.metropolitan.cs330_pz.data.remote.dto.BookDto
 import rs.ac.metropolitan.cs330_pz.data.repository.BookRepositoryImpl
+import rs.ac.metropolitan.cs330_pz.domain.use_case.book.getAllBooks.GetAllBooksUseCase
 import javax.inject.Inject
 @HiltViewModel
-class LibraryViewModel @Inject constructor(private val rep:BookRepositoryImpl): ViewModel() {
+class LibraryViewModel @Inject constructor(private val uc1:GetAllBooksUseCase): ViewModel() {
     private val _books = MutableStateFlow<List<Book>>(emptyList())
     val books: StateFlow<List<Book>> = _books
 
@@ -22,7 +23,7 @@ class LibraryViewModel @Inject constructor(private val rep:BookRepositoryImpl): 
 
     private fun getAll() {
         viewModelScope.launch {
-            _books.value = rep.getAllBooks() ?: emptyList()
+            _books.value = uc1() ?: emptyList()
         }
     }
 }

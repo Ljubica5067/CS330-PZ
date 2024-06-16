@@ -8,9 +8,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import rs.ac.metropolitan.cs330_pz.data.entities.Book
 import rs.ac.metropolitan.cs330_pz.data.repository.BookRepositoryImpl
+import rs.ac.metropolitan.cs330_pz.domain.use_case.book.getAllFav.GetAllFavUseCase
+import rs.ac.metropolitan.cs330_pz.domain.use_case.book.getBookById.GetBookByIdUseCase
+import rs.ac.metropolitan.cs330_pz.domain.use_case.book.updateFavourite.UpdateFavouriteUseCase
 import javax.inject.Inject
 @HiltViewModel
-class FavouritesViewModel@Inject constructor (private val bookRepository: BookRepositoryImpl):
+class FavouritesViewModel@Inject constructor (private val uc1:BookRepositoryImpl,private val uc2:UpdateFavouriteUseCase,private val uc3:GetAllFavUseCase):
     ViewModel(){
     private val _isFavourite = MutableStateFlow<Boolean>(false)
     val isFavourite: StateFlow<Boolean> = _isFavourite
@@ -23,20 +26,20 @@ class FavouritesViewModel@Inject constructor (private val bookRepository: BookRe
 
     fun checkIfBookIsFavourite(bookId: Int) {
         viewModelScope.launch {
-            val book = bookRepository.getBookById(bookId)
+            val book = uc1.getBookById(bookId)
             _isFavourite.value = book?.favourite ?: false
         }
     }
 
     fun updateFavourite(bookId: Int, favourite: Boolean) {
         viewModelScope.launch {
-            bookRepository.updateFavourite(bookId, favourite)
+            uc2(bookId, favourite)
             _isFavourite.value = favourite
         }
     }
 
     fun getAll()
     {
-        viewModelScope.launch { _favouriteBooks.value = bookRepository.getAllFav() ?: emptyList() }
+        viewModelScope.launch { _favouriteBooks.value = uc3() ?: emptyList() }
     }
 }

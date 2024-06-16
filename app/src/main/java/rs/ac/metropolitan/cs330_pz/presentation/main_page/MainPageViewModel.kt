@@ -12,16 +12,15 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import rs.ac.metropolitan.cs330_pz.data.remote.dto.BookDto
 import rs.ac.metropolitan.cs330_pz.data.repository.BookApiRepositoryImpl
+import rs.ac.metropolitan.cs330_pz.domain.use_case.bookAPI.getAllBooks.GetAllBooksUseCase
 import javax.inject.Inject
 
 @HiltViewModel
-class MainPageViewModel @Inject constructor(private val repository:BookApiRepositoryImpl) : ViewModel(){
+class MainPageViewModel @Inject constructor(private val uc1:GetAllBooksUseCase) : ViewModel(){
     private val _genres = MutableStateFlow<List<String>>(emptyList())
     val genres: StateFlow<List<String>> = _genres
     private val _books = MutableStateFlow<List<BookDto>>(emptyList())
     private val _searchQuery = MutableStateFlow("")
-    val searchQuery: StateFlow<String> = _searchQuery
-
     private val _selectedGenres = MutableStateFlow<Set<String>>(emptySet())
     val selectedGenres: StateFlow<Set<String>> = _selectedGenres
 
@@ -33,7 +32,7 @@ class MainPageViewModel @Inject constructor(private val repository:BookApiReposi
     private fun fetchGenres()
     {
         viewModelScope.launch {
-            val books = repository.getAllBooks().map { bookDto ->
+            val books = uc1().map { bookDto ->
             BookDto(
                 id=bookDto.id,
                 fullBookName = bookDto.fullBookName,
@@ -49,7 +48,7 @@ class MainPageViewModel @Inject constructor(private val repository:BookApiReposi
     private fun fetchBooks() {
         viewModelScope.launch {
             try {
-                val bookDtos = repository.getAllBooks()
+                val bookDtos = uc1()
                 val books = bookDtos.map { dto ->
                     BookDto(
                         id = dto.id,

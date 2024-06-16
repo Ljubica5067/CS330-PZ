@@ -9,9 +9,13 @@ import kotlinx.coroutines.launch
 import rs.ac.metropolitan.cs330_pz.data.entities.Book
 import rs.ac.metropolitan.cs330_pz.data.remote.dto.BookDto
 import rs.ac.metropolitan.cs330_pz.data.repository.BookRepositoryImpl
+import rs.ac.metropolitan.cs330_pz.domain.use_case.book.delete.DeleteUseCase
+import rs.ac.metropolitan.cs330_pz.domain.use_case.book.getBookById.GetBookByIdUseCase
+import rs.ac.metropolitan.cs330_pz.domain.use_case.book.insert.InsertUseCase
+import rs.ac.metropolitan.cs330_pz.domain.use_case.book.getBookByTitle.GetBooksByTitleUseCase
 import javax.inject.Inject
 @HiltViewModel
-class BookDetailPageViewModel @Inject constructor(private val bookRepository: BookRepositoryImpl):
+class BookDetailPageViewModel @Inject constructor(private val uc1:InsertUseCase,private val uc2:DeleteUseCase,private val uc3:GetBookByIdUseCase,private val uc4:GetBooksByTitleUseCase):
     ViewModel(){
     private val _isInLibrary = MutableStateFlow(false)
     val isInLibrary: StateFlow<Boolean> = _isInLibrary
@@ -21,20 +25,20 @@ class BookDetailPageViewModel @Inject constructor(private val bookRepository: Bo
 
     fun addBookToLibrary(book: Book) {
         viewModelScope.launch {
-            bookRepository.insert(book)
+            uc1(book)
             _isInLibrary.value = true
         }
     }
 
     fun remove(id:Int)
     {
-        viewModelScope.launch{bookRepository.delete(id)
+        viewModelScope.launch{uc2(id)
             _isInLibrary.value = false}
     }
 
     fun checkIfBookIsInLibrary(bookId: Int) {
         viewModelScope.launch {
-            val book = bookRepository.getBookById(bookId)
+            val book = uc3(bookId)
             _isInLibrary.value = book != null
         }
 
@@ -44,7 +48,7 @@ class BookDetailPageViewModel @Inject constructor(private val bookRepository: Bo
 
     suspend fun exists(title:String):Boolean
     {
-        if(bookRepository.getBookByTitle(title)!=null)
+        if(uc4(title)!=null)
         {
             return true
         }

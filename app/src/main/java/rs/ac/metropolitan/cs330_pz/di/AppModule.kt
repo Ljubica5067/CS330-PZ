@@ -16,7 +16,9 @@ import rs.ac.metropolitan.cs330_pz.data.dao.BookDao
 import rs.ac.metropolitan.cs330_pz.data.db.DatabaseDB
 import rs.ac.metropolitan.cs330_pz.data.remote.BooksApi
 import rs.ac.metropolitan.cs330_pz.data.repository.BookApiRepositoryImpl
+import rs.ac.metropolitan.cs330_pz.data.repository.BookRepositoryImpl
 import rs.ac.metropolitan.cs330_pz.domain.repository.BookApiRepository
+import rs.ac.metropolitan.cs330_pz.domain.repository.BookRepository
 import javax.inject.Singleton
 
 @Module
@@ -62,5 +64,11 @@ object AppModule {
     @Provides
     fun provideBookDao(database: DatabaseDB): BookDao {
         return database.bookDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideBookRepository(bookDao: BookDao): BookRepository {
+        return BookRepositoryImpl(bookDao)
     }
 }
