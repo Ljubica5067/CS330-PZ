@@ -9,4 +9,7 @@ interface BookRepository {
     suspend fun getAllBooks(): List<Book>?
     suspend fun getBookByTitle(title: String): Book?
     suspend fun updateBookProgress(id:Int,progress:Int)
+    suspend fun updateFavourite(id:Int,favourite:Boolean)
+    suspend fun getBookById(id:Int):Book
+    suspend fun getAllFav():List<Book>
 }

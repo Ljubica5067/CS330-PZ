@@ -12,6 +12,7 @@ class BookRepositoryImpl @Inject constructor(private val bookDao:BookDao): BookR
 
 
 
+
     override suspend fun update(book: Book) {
         bookDao.update(book)
     }
@@ -31,5 +32,17 @@ class BookRepositoryImpl @Inject constructor(private val bookDao:BookDao): BookR
     override suspend fun updateBookProgress(id:Int,progress:Int)
     {
         bookDao.updateBookProgress(id,progress)
+    }
+
+    override suspend fun updateFavourite(id: Int, favourite: Boolean) {
+        bookDao.updateFavourite(id,favourite)
+    }
+
+    override suspend fun getBookById(id: Int):Book {
+        return bookDao.getBookById(id)
+    }
+
+    override suspend fun getAllFav(): List<Book> {
+        return bookDao.getFavouriteBooks()
     }
 }

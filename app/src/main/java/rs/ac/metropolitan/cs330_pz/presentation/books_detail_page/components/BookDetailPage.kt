@@ -27,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,20 +45,21 @@ import coil.compose.rememberImagePainter
 import kotlinx.coroutines.launch
 import rs.ac.metropolitan.cs330_pz.data.entities.Book
 import rs.ac.metropolitan.cs330_pz.presentation.books_detail_page.BookDetailPageViewModel
+import rs.ac.metropolitan.cs330_pz.presentation.favourites_page.FavouritesViewModel
 import rs.ac.metropolitan.cs330_pz.presentation.main_page.MainPageViewModel
 import kotlin.random.Random
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
-fun BookDetailPage(bookId: Int, navController: NavController, viewModel: MainPageViewModel = hiltViewModel(),vm:BookDetailPageViewModel= hiltViewModel()) {
+fun BookDetailPage(bookId: Int, navController: NavController, viewModel: MainPageViewModel = hiltViewModel(),vm:BookDetailPageViewModel= hiltViewModel(),favVM:FavouritesViewModel= hiltViewModel()) {
     val book = viewModel.getBookById(bookId)
-    var bookExists by remember { mutableStateOf(false) }
+    val isInLibrary by vm.isInLibrary.collectAsState()
     val book1= book?.let { Book(it.id,book.coverImage, book.fullBookName, Random.nextInt(0, 101), false) }
+    val isFavourite by favVM.isFavourite.collectAsState()
     val scope = rememberCoroutineScope()
-    LaunchedEffect(book?.fullBookName) {
-        book?.fullBookName?.let { title ->
-            bookExists = vm.exists(title)
-        }
+    LaunchedEffect(bookId) {
+        vm.checkIfBookIsInLibrary(bookId)
+        favVM.checkIfBookIsFavourite(bookId)
     }
     Scaffold(
         topBar = {
@@ -71,16 +73,22 @@ fun BookDetailPage(bookId: Int, navController: NavController, viewModel: MainPag
                     Text(text = "Book Details")
                 },
                 actions = {
-                    IconButton(onClick ={navController.popBackStack()}) {
+                    IconButton(onClick = {
+                        if (book != null) {
+                            scope.launch {
+                                favVM.updateFavourite(book.id, !isFavourite)
+                            }
+                        }
+                    }) {
                         Icon(
-                            imageVector = if (true) Icons.Default.Favorite else Icons.Default.FavoriteBorder,//prepraviti if
+                            imageVector = if (isFavourite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                             contentDescription = "Favorite"
                         )
                     }
                 }
             )
         }
-    ) { paddingValues ->
+    ){ paddingValues ->
         Column(
             modifier = Modifier
                 .padding(paddingValues)
@@ -137,27 +145,27 @@ fun BookDetailPage(bookId: Int, navController: NavController, viewModel: MainPag
                         Chip(genre = genre)
                     }
                 }
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = {
-                scope.launch {
-                    if (book1 != null) {
-                        if (bookExists) {
-                            vm.remove(book1.id) // Assuming you have this function
-                            bookExists = false
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(onClick = {
+                    scope.launch {
+                        if (isInLibrary) {
+                            if (book1 != null) {
+                                vm.remove(book1.id)
+                            }
                         } else {
-                            vm.addBookToLibrary(book1)
-                            bookExists = true
+                            if (book != null) {
+                                vm.addBookToLibrary(Book(book.id, book.coverImage, book.fullBookName, Random.nextInt(0, 101), false))
+                            }
                         }
                     }
+                }) {
+                    Text(text = if (isInLibrary) "Remove from library" else "Add to library")
                 }
-                Log.d("Unos u bazu", "$book1")
-            }) {
-                Text(text = if (bookExists) "Remove from library" else "Add to library")
             }
         }
     }
 }
+
 
 @Composable
 fun Chip(genre: String) {

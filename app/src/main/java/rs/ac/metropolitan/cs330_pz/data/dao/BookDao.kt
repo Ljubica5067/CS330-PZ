@@ -27,6 +27,14 @@ interface BookDao {
     @Query("UPDATE books SET progress = :progress WHERE id = :bookId")
     suspend fun updateBookProgress(bookId: Int, progress: Int)
 
-   /* @Query("SELECT * FROM books WHERE favourite= 1")
-    suspend fun getFavouriteBooks(favourite:Boolean):List<Book>*/
+    @Query("SELECT * FROM books WHERE favourite= 1")
+    suspend fun getFavouriteBooks():List<Book>
+
+    @Query("UPDATE books SET favourite=:fave WHERE id=:bookId")
+    suspend fun updateFavourite(bookId: Int,fave:Boolean)
+
+    @Query("SELECT * FROM books where id=:bookId")
+        suspend fun getBookById(bookId:Int):Book
+
+
 }

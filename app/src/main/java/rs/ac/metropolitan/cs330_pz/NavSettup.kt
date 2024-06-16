@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import rs.ac.metropolitan.cs330_pz.presentation.Screen
 import rs.ac.metropolitan.cs330_pz.presentation.books_detail_page.components.BookDetailPage
+import rs.ac.metropolitan.cs330_pz.presentation.favourites_page.components.FavouritesPage
 import rs.ac.metropolitan.cs330_pz.presentation.library_page.components.LibraryPage
 import rs.ac.metropolitan.cs330_pz.presentation.main_page.components.MainScreen
 import rs.ac.metropolitan.cs330_pz.presentation.menu_page.components.MenuPage
@@ -48,7 +49,7 @@ MainScreen(navController = navController)
 
         composable(route=BooksRoute.Fave.route)
         {
-
+            FavouritesPage(navController = navController)
         }
 
     }
