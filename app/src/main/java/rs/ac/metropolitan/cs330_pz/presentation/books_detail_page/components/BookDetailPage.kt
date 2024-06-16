@@ -1,5 +1,6 @@
 package rs.ac.metropolitan.cs330_pz.presentation.books_detail_page.components
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -34,13 +35,17 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
+import rs.ac.metropolitan.cs330_pz.data.entities.Book
+import rs.ac.metropolitan.cs330_pz.presentation.books_detail_page.BookDetailPageViewModel
 import rs.ac.metropolitan.cs330_pz.presentation.main_page.MainPageViewModel
+import kotlin.random.Random
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
-fun BookDetailPage(bookId: Int, navController: NavController, viewModel: MainPageViewModel = hiltViewModel()) {
+fun BookDetailPage(bookId: Int, navController: NavController, viewModel: MainPageViewModel = hiltViewModel(),vm:BookDetailPageViewModel= hiltViewModel()) {
     val book = viewModel.getBookById(bookId)
 
+    val book1= book?.let { Book(it.id, book.fullBookName, Random.nextInt(0, 101), false) }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -121,7 +126,12 @@ fun BookDetailPage(bookId: Int, navController: NavController, viewModel: MainPag
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = { /*TODO*/ }) {
+            Button(onClick = {
+                if (book1 != null) {
+                    vm.addBookToLibrary(book1)
+                }
+                Log.d("Unos u bazu","$book1")
+            }) {
                 Text(text = "Add to library")
             }
         }

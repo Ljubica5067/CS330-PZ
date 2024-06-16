@@ -90,6 +90,8 @@ class MainPageViewModel @Inject constructor(private val repository:BookApiReposi
     fun getBookById(bookId: Int): BookDto? {
         return _books.value.find { it.id == bookId }
     }
+
+
 }
 
 

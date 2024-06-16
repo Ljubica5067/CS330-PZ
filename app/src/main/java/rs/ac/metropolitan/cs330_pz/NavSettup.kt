@@ -28,7 +28,7 @@ MainScreen(navController = navController)
             val elementId=navBackStackEntry.arguments?.getString("Id")
             if(elementId!=null)
             {
-                BookDetailPage(elementId.toInt(),navController = navController)
+                BookDetailPage(elementId.toInt(),navController = navController,)
             }
             else
             {
