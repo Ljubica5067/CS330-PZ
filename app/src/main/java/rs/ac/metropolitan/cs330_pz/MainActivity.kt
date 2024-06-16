@@ -11,9 +11,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
+import com.example.compose.CS330PZTheme
 import dagger.hilt.android.AndroidEntryPoint
 import rs.ac.metropolitan.cs330_pz.presentation.main_page.components.MainScreen
-import rs.ac.metropolitan.cs330_pz.ui.theme.CS330PZTheme
+
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
