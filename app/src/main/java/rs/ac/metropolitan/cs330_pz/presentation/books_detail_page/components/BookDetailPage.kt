@@ -26,6 +26,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
+import kotlinx.coroutines.launch
 import rs.ac.metropolitan.cs330_pz.data.entities.Book
 import rs.ac.metropolitan.cs330_pz.presentation.books_detail_page.BookDetailPageViewModel
 import rs.ac.metropolitan.cs330_pz.presentation.main_page.MainPageViewModel
@@ -44,8 +51,14 @@ import kotlin.random.Random
 @Composable
 fun BookDetailPage(bookId: Int, navController: NavController, viewModel: MainPageViewModel = hiltViewModel(),vm:BookDetailPageViewModel= hiltViewModel()) {
     val book = viewModel.getBookById(bookId)
-
+    var bookExists by remember { mutableStateOf(false) }
     val book1= book?.let { Book(it.id, book.fullBookName, Random.nextInt(0, 101), false) }
+    val scope = rememberCoroutineScope()
+    LaunchedEffect(book?.fullBookName) {
+        book?.fullBookName?.let { title ->
+            bookExists = vm.exists(title)
+        }
+    }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -127,12 +140,20 @@ fun BookDetailPage(bookId: Int, navController: NavController, viewModel: MainPag
             }
             Spacer(modifier = Modifier.height(16.dp))
             Button(onClick = {
-                if (book1 != null) {
-                    vm.addBookToLibrary(book1)
+                scope.launch {
+                    if (book1 != null) {
+                        if (bookExists) {
+                            vm.remove(book1.id) // Assuming you have this function
+                            bookExists = false
+                        } else {
+                            vm.addBookToLibrary(book1)
+                            bookExists = true
+                        }
+                    }
                 }
-                Log.d("Unos u bazu","$book1")
+                Log.d("Unos u bazu", "$book1")
             }) {
-                Text(text = "Add to library")
+                Text(text = if (bookExists) "Remove from library" else "Add to library")
             }
         }
     }

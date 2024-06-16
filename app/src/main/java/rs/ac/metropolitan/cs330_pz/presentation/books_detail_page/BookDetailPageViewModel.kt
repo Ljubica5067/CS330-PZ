@@ -21,7 +21,21 @@ class BookDetailPageViewModel @Inject constructor(private val bookRepository: Bo
         }
     }
 
+    fun remove(id:Int)
+    {
+        viewModelScope.launch{bookRepository.delete(id)}
+    }
+
     fun getBookById(bookId: Int): BookDto? {
         return _books.value.find { it.id == bookId }
+    }
+
+    suspend fun exists(title:String):Boolean
+    {
+        if(bookRepository.getBookByTitle(title)!=null)
+        {
+            return true
+        }
+        else return false
     }
 }
