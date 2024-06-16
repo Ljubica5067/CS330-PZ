@@ -10,22 +10,25 @@ androidx-navigation = "2.7.7"
 activityCompose = "1.8.2"
 composeBom = "2024.04.00"
 ksp = "1.9.22-1.0.17"
+mockitoCore = "5.11.0"
 okhttp = "4.12.0"
 gson = "2.10.1"
 retrofit = "2.9.0"
-
+mockito = "4.0.0"
 lifecycle-runtime = "2.7.0"
 hilt = "2.49"
 hilt-navigation-compose = "1.2.0"
 room = "2.6.1"
 coil = "2.4.0"
-
+mockk = "1.12.5"
 
 
 robolectric = "4.7.3"
 lifecycleRuntimeComposeAndroid = "2.8.1"
 
 [libraries]
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

@@ -108,4 +108,10 @@ dependencies {
     implementation(libs.square.retrofit)
     implementation(libs.square.retrofit.converter.gson)
     implementation(libs.square.okhttp.logging.interceptor)
+
+
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockk)
+    androidTestImplementation(libs.mockk)
+
 }
