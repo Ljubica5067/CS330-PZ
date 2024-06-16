@@ -52,7 +52,7 @@ import kotlin.random.Random
 fun BookDetailPage(bookId: Int, navController: NavController, viewModel: MainPageViewModel = hiltViewModel(),vm:BookDetailPageViewModel= hiltViewModel()) {
     val book = viewModel.getBookById(bookId)
     var bookExists by remember { mutableStateOf(false) }
-    val book1= book?.let { Book(it.id, book.fullBookName, Random.nextInt(0, 101), false) }
+    val book1= book?.let { Book(it.id,book.coverImage, book.fullBookName, Random.nextInt(0, 101), false) }
     val scope = rememberCoroutineScope()
     LaunchedEffect(book?.fullBookName) {
         book?.fullBookName?.let { title ->

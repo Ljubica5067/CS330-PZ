@@ -54,7 +54,9 @@ object AppModule {
             appContext,
             DatabaseDB::class.java,
             "book.db"
-        ).build()
+        )
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
     @Provides

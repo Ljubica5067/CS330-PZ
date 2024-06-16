@@ -54,9 +54,9 @@ class MainPageViewModel @Inject constructor(private val repository:BookApiReposi
                     BookDto(
                         id = dto.id,
                         fullBookName = dto.fullBookName,
-                        authorName = dto.authorName,
                         description = dto.description,
-                        coverImage = dto.coverImage,
+                        authorName = dto.authorName,
+                      coverImage = dto.coverImage,
                         genres = dto.genres
                     )
                 }

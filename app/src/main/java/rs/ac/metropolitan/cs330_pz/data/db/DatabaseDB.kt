@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import rs.ac.metropolitan.cs330_pz.data.dao.BookDao
 import rs.ac.metropolitan.cs330_pz.data.entities.Book
 import kotlin.concurrent.Volatile
-@Database(entities = [Book::class],version=1)
+@Database(entities = [Book::class],version=2)
 abstract class DatabaseDB :RoomDatabase(){
     abstract fun bookDao():BookDao
 }
