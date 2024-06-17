@@ -39,7 +39,8 @@ class BookDetailPageViewModel @Inject constructor(private val uc1:InsertUseCase,
     fun checkIfBookIsInLibrary(bookId: Int) {
         viewModelScope.launch {
             val book = uc3(bookId)
-            _isInLibrary.value = book != null
+            _isInLibrary.value = book?.id ==bookId
+
         }
 
     fun getBookById(bookId: Int): BookDto? {
